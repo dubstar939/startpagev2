@@ -1,65 +1,60 @@
-import { useState } from 'react';
-import { Widget, Link as LinkType } from '../types';
+import { useState, useCallback } from 'react';
+import { ListWidget as ListWidgetType, Link } from '../types';
 import { LinkItem } from './LinkItem';
 import { AddLinkForm } from './AddLinkForm';
+import { generateId, getRandomColor, sanitizeUrl } from '../utils/helpers';
 
 interface ListWidgetProps {
-  widget: Widget;
-  onUpdateWidget: (widgetId: string, updatedWidget: Widget) => void;
-  showToast: (message: string) => void;
+  widget: ListWidgetType;
+  onUpdate: (widget: ListWidgetType) => void;
 }
 
-export function ListWidget({ widget, onUpdateWidget, showToast }: ListWidgetProps) {
+export function ListWidget({ widget, onUpdate }: ListWidgetProps) {
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const handleRemoveLink = (linkId: string) => {
-    const updatedLinks = widget.links.filter((link) => link.id !== linkId);
-    onUpdateWidget(widget.id, { ...widget, links: updatedLinks });
-    showToast('Link removed');
-  };
+  const handleAddLink = useCallback((name: string, url: string) => {
+    const newLink: Link = {
+      id: generateId(),
+      name,
+      url: sanitizeUrl(url),
+      bgColor: getRandomColor(),
+    };
 
-  const handleAddLink = (newLink: LinkType) => {
-    onUpdateWidget(widget.id, { ...widget, links: [...widget.links, newLink] });
+    onUpdate({
+      ...widget,
+      links: [...widget.links, newLink],
+    });
     setShowAddForm(false);
-    showToast(`"${newLink.name}" added successfully`);
-  };
+  }, [widget, onUpdate]);
+
+  const handleRemoveLink = useCallback((linkId: string) => {
+    onUpdate({
+      ...widget,
+      links: widget.links.filter(link => link.id !== linkId),
+    });
+  }, [widget, onUpdate]);
 
   return (
-    <div className="bg-slate-900/80 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 transition-transform duration-200 hover:-translate-y-0.5">
-      <div className="flex items-center justify-between px-3.5 py-3 border-b border-white/5">
-        <span className="text-sm font-bold text-white tracking-wide">
-          {widget.title}
-        </span>
+    <div className="bg-slate-900/80 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:-translate-y-0.5 transition-transform">
+      <div className="flex items-center justify-between px-3.5 py-3 border-b border-white/10">
+        <h3 className="text-xs font-bold text-white tracking-wide">{widget.title}</h3>
         <div className="flex gap-1">
           <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-none border-none text-white/40 cursor-pointer text-base px-1 py-0.5 rounded transition-all hover:text-white hover:bg-white/10"
-            title="Add link"
+            onClick={() => setShowAddForm(true)}
+            className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
+            aria-label="Add link"
           >
             +
           </button>
-          <button
-            className="bg-none border-none text-white/40 cursor-pointer text-base px-1 py-0.5 rounded transition-all hover:text-white hover:bg-white/10"
-            title="More options"
-          >
-            ⋮
-          </button>
         </div>
       </div>
-      <div className="py-2 max-h-60 overflow-y-auto">
-        {widget.links.map((link) => (
-          <LinkItem
-            key={link.id}
-            link={link}
-            onRemove={() => handleRemoveLink(link.id)}
-          />
+      <div className="max-h-64 overflow-y-auto">
+        {widget.links.map(link => (
+          <LinkItem key={link.id} link={link} onRemove={handleRemoveLink} />
         ))}
       </div>
       {showAddForm && (
-        <AddLinkForm
-          onAdd={handleAddLink}
-          onCancel={() => setShowAddForm(false)}
-        />
+        <AddLinkForm onAdd={handleAddLink} onCancel={() => setShowAddForm(false)} />
       )}
     </div>
   );

@@ -1,30 +1,32 @@
-import { IconData } from '../types';
+import { memo } from 'react';
+import { IconGridWidget as IconGridWidgetType } from '../types';
 
 interface IconGridWidgetProps {
-  data: IconData[];
+  widget: IconGridWidgetType;
 }
 
-export function IconGridWidget({ data }: IconGridWidgetProps) {
+export const IconGridWidget = memo(function IconGridWidget({ widget }: IconGridWidgetProps) {
   return (
-    <div className="grid grid-cols-4 gap-1.5 p-2.5">
-      {data.map((icon) => (
-        <a
-          key={icon.id}
-          href={icon.url || '#'}
-          className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg cursor-pointer no-underline transition-colors duration-150 hover:bg-white/10"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white ${icon.bgColor}`}
+    <div className="bg-slate-900/80 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:-translate-y-0.5 transition-transform">
+      <div className="flex items-center justify-between px-3.5 py-3 border-b border-white/10">
+        <h3 className="text-xs font-bold text-white tracking-wide">{widget.title}</h3>
+      </div>
+      <div className="grid grid-cols-4 gap-1.5 p-3.5">
+        {widget.icons.map(icon => (
+          <a
+            key={icon.id}
+            href={icon.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg hover:bg-white/5 transition-colors"
           >
-            {icon.content}
-          </div>
-          <span className="text-xs text-white/70 text-center truncate max-w-full">
-            {icon.label}
-          </span>
-        </a>
-      ))}
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${icon.bgColor}`}>
+              <span className="text-lg font-bold">{icon.content}</span>
+            </div>
+            <span className="text-xs text-white/70 text-center truncate w-full">{icon.label}</span>
+          </a>
+        ))}
+      </div>
     </div>
   );
-}
+});
