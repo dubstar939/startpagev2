@@ -1,30 +1,34 @@
-export interface LinkItem {
+export interface Link {
   id: string;
   name: string;
   url: string;
-  color: string;
-  letter: string;
-}
-
-export interface Widget {
-  id: string;
-  title: string;
-  type: 'list' | 'icon-grid' | 'quicklinks';
-  links: LinkItem[];
+  bgColor: string;
 }
 
 export interface IconData {
   id: string;
   label: string;
-  bgColor: string;
   content: string;
+  bgColor: string;
   url: string;
 }
 
 export interface QuicklinkData {
   id: string;
   label: string;
-  bgColor: string;
   content: string;
+  bgColor: string;
   url: string;
+}
+
+export interface Widget {
+  id: string;
+  title: string;
+  links?: Link[];
+  icons?: IconData[];
+  quicklinks?: QuicklinkData[];
+}
+
+export interface AppData {
+  widgets: Widget[];
 }

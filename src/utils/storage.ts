@@ -1,155 +1,152 @@
-import { Widget, IconData, QuicklinkData } from '../types';
+import { AppData, Widget, Link, IconData, QuicklinkData } from '../types';
+import { generateId, getRandomColor } from './helpers';
 
 const STORAGE_KEY = 'startpage_data';
 
-export interface StorageData {
-  widgets: Record<string, Widget>;
-  iconGrid: IconData[];
-  quicklinks: QuicklinkData[];
+// Default data structure
+function getDefaultData(): AppData {
+  return {
+    widgets: [
+      {
+        id: 'directory',
+        title: 'Shared Directory Widget',
+        links: [
+          { id: generateId(), name: 'Executive', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Onboarding', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'IT', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'Marketing', url: '#', bgColor: 'bg-orange' },
+          { id: generateId(), name: 'Sales', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'Customer Success', url: '#', bgColor: 'bg-pink' },
+          { id: generateId(), name: 'HR', url: '#', bgColor: 'bg-indigo' },
+          { id: generateId(), name: 'Finance', url: '#', bgColor: 'bg-cyan' },
+          { id: generateId(), name: 'Ocean Workspace', url: '#', bgColor: 'bg-amber' },
+          { id: generateId(), name: 'Book a 30-minute demo', url: '#', bgColor: 'bg-slate' },
+        ],
+      },
+      {
+        id: 'engagement',
+        title: 'Employee Engagement Tools',
+        links: [
+          { id: generateId(), name: 'TinyPulse', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'Officevibe', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Culture Amp', url: '#', bgColor: 'bg-red' },
+          { id: generateId(), name: 'Glint', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'Peakon', url: '#', bgColor: 'bg-orange' },
+          { id: generateId(), name: 'Kazoo', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'Qualtrics EmployeeXM', url: '#', bgColor: 'bg-indigo' },
+          { id: generateId(), name: 'Engagedly', url: '#', bgColor: 'bg-pink' },
+        ],
+      },
+      {
+        id: 'events',
+        title: 'Event Management',
+        links: [
+          { id: generateId(), name: 'Eventbrite', url: '#', bgColor: 'bg-orange' },
+          { id: generateId(), name: 'Cvent', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Meetup', url: '#', bgColor: 'bg-red' },
+          { id: generateId(), name: 'Splash', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'Whova', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'Aventri', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'Bizzabo', url: '#', bgColor: 'bg-pink' },
+          { id: generateId(), name: 'Ticket Tailor', url: '#', bgColor: 'bg-indigo' },
+        ],
+      },
+      {
+        id: 'company',
+        title: 'Shared Company Links',
+        icons: [
+          { id: generateId(), label: 'Slack', content: 'S', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'Asana', content: 'A', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'Gmail', content: '✉', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'Drive', content: '▲', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'ChatGPT', content: 'AI', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'GitHub', content: '⬡', bgColor: 'bg-slate-700', url: '#' },
+          { id: generateId(), label: 'Discord', content: '🎮', bgColor: 'bg-indigo-600', url: '#' },
+          { id: generateId(), label: 'Google Cal...', content: '31', bgColor: 'bg-blue-600', url: '#' },
+        ],
+      },
+      {
+        id: 'collab',
+        title: 'Collaboration and Communication Tools',
+        links: [
+          { id: generateId(), name: 'Workplace from Facebook', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Microsoft Teams', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'Zoom', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Google Meet', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'Asana', url: '#', bgColor: 'bg-orange' },
+          { id: generateId(), name: 'Trello', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'Skype', url: '#', bgColor: 'bg-cyan' },
+        ],
+      },
+      {
+        id: 'quicklinks',
+        title: 'Quicklinks',
+        quicklinks: [
+          { id: generateId(), label: 'Indeed', content: 'i', bgColor: 'bg-blue-600', url: '#' },
+          { id: generateId(), label: 'Recruiter', content: '👤', bgColor: 'bg-pink-600', url: '#' },
+          { id: generateId(), label: 'BambooHR', content: 'b', bgColor: 'bg-green-600', url: '#' },
+        ],
+      },
+      {
+        id: 'feedback',
+        title: 'Employee Feedback Tools',
+        links: [
+          { id: generateId(), name: 'SurveyMonkey', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'Typeform', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: '15Five', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'Lattice', url: '#', bgColor: 'bg-orange' },
+        ],
+      },
+      {
+        id: 'talent',
+        title: 'Talent Acquisition Tools',
+        links: [
+          { id: generateId(), name: 'LinkedIn Talent Solutions', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Glassdoor for Employers', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'ZipRecruiter', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'Monster', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'CareerBuilder for Employers', url: '#', bgColor: 'bg-amber' },
+          { id: generateId(), name: 'Lever', url: '#', bgColor: 'bg-slate' },
+        ],
+      },
+      {
+        id: 'hrms',
+        title: 'HR Management Systems',
+        links: [
+          { id: generateId(), name: 'Workday', url: '#', bgColor: 'bg-orange' },
+          { id: generateId(), name: 'Gusto', url: '#', bgColor: 'bg-green' },
+          { id: generateId(), name: 'Zenefits', url: '#', bgColor: 'bg-blue' },
+          { id: generateId(), name: 'Zoho Survey', url: '#', bgColor: 'bg-red' },
+          { id: generateId(), name: 'Namely', url: '#', bgColor: 'bg-purple' },
+          { id: generateId(), name: 'ADP', url: '#', bgColor: 'bg-teal' },
+          { id: generateId(), name: 'SAP SuccessFactors', url: '#', bgColor: 'bg-indigo' },
+          { id: generateId(), name: 'Paychex', url: '#', bgColor: 'bg-amber' },
+        ],
+      },
+    ],
+  };
 }
 
-export const defaultWidgets: Record<string, Widget> = {
-  directory: {
-    id: 'directory',
-    title: 'Shared Directory Widget',
-    type: 'list',
-    links: [
-      { id: '1', name: 'Executive', url: '#', color: 'bg-blue-500', letter: 'E' },
-      { id: '2', name: 'Onboarding', url: '#', color: 'bg-green-500', letter: 'O' },
-      { id: '3', name: 'IT', url: '#', color: 'bg-purple-500', letter: 'I' },
-      { id: '4', name: 'Marketing', url: '#', color: 'bg-orange-500', letter: 'M' },
-      { id: '5', name: 'Sales', url: '#', color: 'bg-teal-500', letter: 'S' },
-      { id: '6', name: 'Customer Success', url: '#', color: 'bg-pink-500', letter: 'C' },
-      { id: '7', name: 'HR', url: '#', color: 'bg-indigo-500', letter: 'H' },
-      { id: '8', name: 'Finance', url: '#', color: 'bg-cyan-500', letter: 'F' },
-      { id: '9', name: 'Ocean Workspace', url: '#', color: 'bg-amber-500', letter: 'O' },
-      { id: '10', name: 'Book a 30-minute demo', url: '#', color: 'bg-slate-700', letter: 'B' },
-    ],
-  },
-  engagement: {
-    id: 'engagement',
-    title: 'Employee Engagement Tools',
-    type: 'list',
-    links: [
-      { id: '1', name: 'TinyPulse', url: '#', color: 'bg-green-500', letter: 'T' },
-      { id: '2', name: 'Officevibe', url: '#', color: 'bg-blue-500', letter: 'O' },
-      { id: '3', name: 'Culture Amp', url: '#', color: 'bg-red-500', letter: 'C' },
-      { id: '4', name: 'Glint', url: '#', color: 'bg-teal-500', letter: 'G' },
-      { id: '5', name: 'Peakon', url: '#', color: 'bg-orange-500', letter: 'P' },
-      { id: '6', name: 'Kazoo', url: '#', color: 'bg-purple-500', letter: 'K' },
-      { id: '7', name: 'Qualtrics EmployeeXM', url: '#', color: 'bg-indigo-500', letter: 'Q' },
-      { id: '8', name: 'Engagedly', url: '#', color: 'bg-pink-500', letter: 'E' },
-    ],
-  },
-  events: {
-    id: 'events',
-    title: 'Event Management',
-    type: 'list',
-    links: [
-      { id: '1', name: 'Eventbrite', url: '#', color: 'bg-orange-500', letter: 'E' },
-      { id: '2', name: 'Cvent', url: '#', color: 'bg-blue-500', letter: 'C' },
-      { id: '3', name: 'Meetup', url: '#', color: 'bg-red-500', letter: 'M' },
-      { id: '4', name: 'Splash', url: '#', color: 'bg-purple-500', letter: 'S' },
-      { id: '5', name: 'Whova', url: '#', color: 'bg-teal-500', letter: 'W' },
-      { id: '6', name: 'Aventri', url: '#', color: 'bg-green-500', letter: 'A' },
-      { id: '7', name: 'Bizzabo', url: '#', color: 'bg-pink-500', letter: 'B' },
-      { id: '8', name: 'Ticket Tailor', url: '#', color: 'bg-indigo-500', letter: 'T' },
-    ],
-  },
-  collab: {
-    id: 'collab',
-    title: 'Collaboration and Communication Tools',
-    type: 'list',
-    links: [
-      { id: '1', name: 'Workplace from Facebook', url: '#', color: 'bg-blue-500', letter: 'W' },
-      { id: '2', name: 'Microsoft Teams', url: '#', color: 'bg-purple-500', letter: 'M' },
-      { id: '3', name: 'Zoom', url: '#', color: 'bg-blue-500', letter: 'Z' },
-      { id: '4', name: 'Google Meet', url: '#', color: 'bg-green-500', letter: 'G' },
-      { id: '5', name: 'Asana', url: '#', color: 'bg-orange-500', letter: 'A' },
-      { id: '6', name: 'Trello', url: '#', color: 'bg-teal-500', letter: 'T' },
-      { id: '7', name: 'Skype', url: '#', color: 'bg-cyan-500', letter: 'S' },
-    ],
-  },
-  feedback: {
-    id: 'feedback',
-    title: 'Employee Feedback Tools',
-    type: 'list',
-    links: [
-      { id: '1', name: 'SurveyMonkey', url: '#', color: 'bg-green-500', letter: 'S' },
-      { id: '2', name: 'Typeform', url: '#', color: 'bg-blue-500', letter: 'T' },
-      { id: '3', name: '15Five', url: '#', color: 'bg-purple-500', letter: '15' },
-      { id: '4', name: 'Lattice', url: '#', color: 'bg-orange-500', letter: 'L' },
-    ],
-  },
-  talent: {
-    id: 'talent',
-    title: 'Talent Acquisition Tools',
-    type: 'list',
-    links: [
-      { id: '1', name: 'LinkedIn Talent Solutions', url: '#', color: 'bg-blue-500', letter: 'L' },
-      { id: '2', name: 'Glassdoor for Employers', url: '#', color: 'bg-green-500', letter: 'G' },
-      { id: '3', name: 'ZipRecruiter', url: '#', color: 'bg-teal-500', letter: 'Z' },
-      { id: '4', name: 'Monster', url: '#', color: 'bg-purple-500', letter: 'M' },
-      { id: '5', name: 'CareerBuilder for Employers', url: '#', color: 'bg-amber-500', letter: 'C' },
-      { id: '6', name: 'Lever', url: '#', color: 'bg-slate-700', letter: 'L' },
-    ],
-  },
-  hrms: {
-    id: 'hrms',
-    title: 'HR Management Systems',
-    type: 'list',
-    links: [
-      { id: '1', name: 'Workday', url: '#', color: 'bg-orange-500', letter: 'W' },
-      { id: '2', name: 'Gusto', url: '#', color: 'bg-green-500', letter: 'G' },
-      { id: '3', name: 'Zenefits', url: '#', color: 'bg-blue-500', letter: 'Z' },
-      { id: '4', name: 'Zoho Survey', url: '#', color: 'bg-red-500', letter: 'Z' },
-      { id: '5', name: 'Namely', url: '#', color: 'bg-purple-500', letter: 'N' },
-      { id: '6', name: 'ADP', url: '#', color: 'bg-teal-500', letter: 'A' },
-      { id: '7', name: 'SAP SuccessFactors', url: '#', color: 'bg-indigo-500', letter: 'S' },
-      { id: '8', name: 'Paychex', url: '#', color: 'bg-amber-500', letter: 'P' },
-    ],
-  },
-};
-
-export const defaultIconGrid: IconData[] = [
-  { id: '1', label: 'Slack', bgColor: 'bg-slate-700', content: 'S', url: '#' },
-  { id: '2', label: 'Asana', bgColor: 'bg-slate-700', content: 'A', url: '#' },
-  { id: '3', label: 'Gmail', bgColor: 'bg-slate-700', content: '✉', url: '#' },
-  { id: '4', label: 'Drive', bgColor: 'bg-slate-700', content: '▲', url: '#' },
-  { id: '5', label: 'ChatGPT', bgColor: 'bg-slate-700', content: 'AI', url: '#' },
-  { id: '6', label: 'GitHub', bgColor: 'bg-slate-700', content: '⬡', url: '#' },
-  { id: '7', label: 'Discord', bgColor: 'bg-indigo-500', content: '🎮', url: '#' },
-  { id: '8', label: 'Google Cal...', bgColor: 'bg-blue-500', content: '31', url: '#' },
-];
-
-export const defaultQuicklinks: QuicklinkData[] = [
-  { id: '1', label: 'Indeed', bgColor: 'bg-blue-500', content: 'i', url: '#' },
-  { id: '2', label: 'Recruiter', bgColor: 'bg-pink-500', content: '👤', url: '#' },
-  { id: '3', label: 'BambooHR', bgColor: 'bg-green-500', content: 'b', url: '#' },
-];
-
-export const defaultData: StorageData = {
-  widgets: defaultWidgets,
-  iconGrid: defaultIconGrid,
-  quicklinks: defaultQuicklinks,
-};
-
-export function loadData(): StorageData {
+export function loadData(): AppData {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Validate that widgets exists and is an array
+      if (parsed && Array.isArray(parsed.widgets)) {
+        return parsed as AppData;
+      }
     }
-  } catch (e) {
-    console.error('Failed to load data from localStorage:', e);
+  } catch (error) {
+    console.error('Error loading data from localStorage:', error);
   }
-  return defaultData;
+  return getDefaultData();
 }
 
-export function saveData(data: StorageData): void {
+export function saveData(data: AppData): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (e) {
-    console.error('Failed to save data to localStorage:', e);
+  } catch (error) {
+    console.error('Error saving data to localStorage:', error);
   }
 }
