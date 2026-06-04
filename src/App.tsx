@@ -65,10 +65,22 @@ export default function App() {
                 );
               }
               if (isIconGridWidget(widget)) {
-                return <IconGridWidget key={widget.id} widget={widget} />;
+                return (
+                  <IconGridWidget
+                    key={widget.id}
+                    widget={widget}
+                    onUpdate={handleWidgetUpdate}
+                  />
+                );
               }
               if (isQuicklinksWidget(widget)) {
-                return <QuicklinksWidget key={widget.id} widget={widget} />;
+                return (
+                  <QuicklinksWidget
+                    key={widget.id}
+                    widget={widget}
+                    onUpdate={handleWidgetUpdate}
+                  />
+                );
               }
               return null;
             })}
