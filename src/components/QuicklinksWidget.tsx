@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { QuicklinksWidget as QuicklinksWidgetType } from '../types';
+import { QuicklinksWidget as QuicklinksWidgetType, QuicklinkData } from '../types';
 
 interface QuicklinksWidgetProps {
   widget: QuicklinksWidgetType;
@@ -9,6 +9,13 @@ interface QuicklinksWidgetProps {
 export const QuicklinksWidget = function QuicklinksWidget({ widget, onUpdate }: QuicklinksWidgetProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState(widget.title);
+
+  const handleRemoveLink = useCallback((linkId: string) => {
+    onUpdate({
+      ...widget,
+      quicklinks: widget.quicklinks.filter(link => link.id !== linkId),
+    });
+  }, [widget, onUpdate]);
 
   const handleTitleSave = useCallback(() => {
     if (editTitle.trim()) {
@@ -57,18 +64,33 @@ export const QuicklinksWidget = function QuicklinksWidget({ widget, onUpdate }: 
       </div>
       <div className="grid grid-cols-3 gap-2.5 p-3.5">
         {widget.quicklinks.map(link => (
-          <a
+          <div
             key={link.id}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-white/5 transition-colors"
+            className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-white/5 transition-colors group relative"
           >
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white ${link.bgColor}`}>
-              <span className="text-xl font-extrabold">{link.content}</span>
-            </div>
-            <span className="text-xs text-white/70 text-center">{link.label}</span>
-          </a>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-2"
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white ${link.bgColor}`}>
+                <span className="text-xl font-extrabold">{link.content}</span>
+              </div>
+              <span className="text-xs text-white/70 text-center">{link.label}</span>
+            </a>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleRemoveLink(link.id);
+              }}
+              className="opacity-0 group-hover:opacity-100 absolute top-1 right-1 text-white/30 hover:text-red-400 transition-opacity text-lg"
+              aria-label={`Remove ${link.label}`}
+            >
+              ×
+            </button>
+          </div>
         ))}
       </div>
     </div>
