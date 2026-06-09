@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 import { QuicklinksWidget as QuicklinksWidgetType, QuicklinkData } from '../types';
+import { AddLinkForm } from './AddLinkForm';
+import { generateId, getRandomColor, sanitizeUrl } from '../utils/helpers';
 
 interface QuicklinksWidgetProps {
   widget: QuicklinksWidgetType;
@@ -9,6 +11,23 @@ interface QuicklinksWidgetProps {
 export const QuicklinksWidget = function QuicklinksWidget({ widget, onUpdate }: QuicklinksWidgetProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState(widget.title);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleAddLink = useCallback((name: string, url: string) => {
+    const newLink: QuicklinkData = {
+      id: generateId(),
+      label: name,
+      content: name.charAt(0).toUpperCase(),
+      url: sanitizeUrl(url),
+      bgColor: getRandomColor(),
+    };
+
+    onUpdate({
+      ...widget,
+      quicklinks: [...widget.quicklinks, newLink],
+    });
+    setShowAddForm(false);
+  }, [widget, onUpdate]);
 
   const handleRemoveLink = useCallback((linkId: string) => {
     onUpdate({
@@ -54,13 +73,22 @@ export const QuicklinksWidget = function QuicklinksWidget({ widget, onUpdate }: 
         ) : (
           <h3 className="text-xs font-bold text-white tracking-wide">{widget.title}</h3>
         )}
-        <button
-          onClick={() => setIsEditingTitle(!isEditingTitle)}
-          className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
-          aria-label="Edit title"
-        >
-          ✎
-        </button>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setIsEditingTitle(!isEditingTitle)}
+            className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
+            aria-label="Edit title"
+          >
+            ✎
+          </button>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
+            aria-label="Add link"
+          >
+            +
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-2.5 p-3.5">
         {widget.quicklinks.map(link => (
@@ -93,6 +121,9 @@ export const QuicklinksWidget = function QuicklinksWidget({ widget, onUpdate }: 
           </div>
         ))}
       </div>
+      {showAddForm && (
+        <AddLinkForm onAdd={handleAddLink} onCancel={() => setShowAddForm(false)} />
+      )}
     </div>
   );
 };
