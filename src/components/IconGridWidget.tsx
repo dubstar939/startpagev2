@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 import { IconGridWidget as IconGridWidgetType, IconData } from '../types';
+import { AddLinkForm } from './AddLinkForm';
+import { generateId, getRandomColor, sanitizeUrl } from '../utils/helpers';
 
 interface IconGridWidgetProps {
   widget: IconGridWidgetType;
@@ -9,6 +11,23 @@ interface IconGridWidgetProps {
 export const IconGridWidget = function IconGridWidget({ widget, onUpdate }: IconGridWidgetProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState(widget.title);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleAddLink = useCallback((name: string, url: string) => {
+    const newIcon: IconData = {
+      id: generateId(),
+      label: name,
+      content: name.charAt(0).toUpperCase(),
+      url: sanitizeUrl(url),
+      bgColor: getRandomColor(),
+    };
+
+    onUpdate({
+      ...widget,
+      icons: [...widget.icons, newIcon],
+    });
+    setShowAddForm(false);
+  }, [widget, onUpdate]);
 
   const handleRemoveLink = useCallback((linkId: string) => {
     onUpdate({
@@ -54,13 +73,22 @@ export const IconGridWidget = function IconGridWidget({ widget, onUpdate }: Icon
         ) : (
           <h3 className="text-xs font-bold text-white tracking-wide">{widget.title}</h3>
         )}
-        <button
-          onClick={() => setIsEditingTitle(!isEditingTitle)}
-          className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
-          aria-label="Edit title"
-        >
-          ✎
-        </button>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setIsEditingTitle(!isEditingTitle)}
+            className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
+            aria-label="Edit title"
+          >
+            ✎
+          </button>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="text-white/40 hover:text-white hover:bg-white/10 px-1 rounded text-base"
+            aria-label="Add link"
+          >
+            +
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-4 gap-1.5 p-3.5">
         {widget.icons.map(icon => (
@@ -93,6 +121,9 @@ export const IconGridWidget = function IconGridWidget({ widget, onUpdate }: Icon
           </div>
         ))}
       </div>
+      {showAddForm && (
+        <AddLinkForm onAdd={handleAddLink} onCancel={() => setShowAddForm(false)} />
+      )}
     </div>
   );
 };
